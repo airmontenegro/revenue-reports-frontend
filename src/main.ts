@@ -10,32 +10,30 @@ import {
 import { PublicClientApplication } from '@azure/msal-browser';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-export function msalInstanceFactory() {
-  const msalInstance =  new PublicClientApplication({
-    auth: {
-      clientId: 'ecaca527-492f-4199-ad73-eec3edbbedc2',
-      authority: 'https://login.microsoftonline.com/b4870f45-b80d-47ef-954b-49c9d1800c9d',
-      redirectUri: 'http://localhost:4200',
-    },
-    cache: {
-      cacheLocation: 'localStorage',
-      storeAuthStateInCookie: false,
-    },
-  });
-    msalInstance.initialize();
+const msalInstance = new PublicClientApplication({
+  auth: {
+    clientId: 'ecaca527-492f-4199-ad73-eec3edbbedc2', // InfoWall-frontend
+    authority: 'https://login.microsoftonline.com/b4870f45-b80d-47ef-954b-49c9d1800c9d', // Your tenant ID
+    redirectUri: 'http://localhost:4200',
+  },
+  cache: {
+    cacheLocation: 'localStorage',
+    storeAuthStateInCookie: false,
+  },
+});
 
-  return msalInstance;
+async function main() {
+  await msalInstance.initialize(); // required to handle redirect responses
+
+  bootstrapApplication(App, {
+    providers: [
+      { provide: MSAL_INSTANCE, useValue: msalInstance },
+      MsalService,
+      MsalGuard,
+      MsalBroadcastService,
+      provideHttpClient(withInterceptorsFromDi()),
+    ],
+  }).catch((err) => console.error(err));
 }
 
-bootstrapApplication(App, {
- providers: [
-    provideHttpClient(withInterceptorsFromDi()),
-    {
-      provide: MSAL_INSTANCE,
-      useFactory: msalInstanceFactory,
-    },
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService,
-  ],
-}).catch(err => console.error(err));
+main();

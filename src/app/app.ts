@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
-import { lastValueFrom } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ApiService } from './services/api.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +11,7 @@ export class App implements OnInit {
   protected title = 'InfoWall';
   token: any;
 
-  constructor(private msalService: MsalService, private http: HttpClient) {
+  constructor(private msalService: MsalService, private apiService: ApiService) {
     }
 
   ngOnInit(): void {
@@ -36,37 +35,18 @@ export class App implements OnInit {
     this.msalService.loginRedirect();
   }
 
-async testCallToBackend() {
-  const account = this.msalService.instance.getActiveAccount();
-
-  if (!account) {
-    console.error('❌ No active MSAL account found.');
-    return;
-  }
-
-  try {
-    const result = await this.msalService.instance.acquireTokenSilent({
-      scopes: ['api://9ac61894-832b-4a38-8258-e4d641a95f2d/user_impersonation'],
-      account,
-    });
-
-    const token = result.accessToken;
-    console.log('🔑 Access token:', token);
-
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // ✅ Correct spelling
-    });
-
-    const url = 'http://localhost:3000';
-
-    const response = await lastValueFrom(this.http.get(url, { headers }));
-    console.log('✅ Backend response:', response);
-    return response;
-
-  } catch (err) {
-    console.error('❌ Token acquisition or API call failed:', err);
-    return null; // ✅ Return on error path too
-  }
+testCallToBackend(): void {
+  this.apiService.call({
+    method: 'GET',
+    route: '',
+  }).subscribe({
+    next: (response) => {
+      console.log('✅ Backend response:', response);
+    },
+    error: (err) => {
+      console.error('❌ API call failed:', err.message);
+    }
+  });
 }
 
 }

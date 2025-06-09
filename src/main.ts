@@ -9,6 +9,8 @@ import {
 } from '@azure/msal-angular';
 import { PublicClientApplication } from '@azure/msal-browser';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
 
 const msalInstance = new PublicClientApplication({
   auth: {
@@ -32,6 +34,7 @@ async function main() {
       MsalGuard,
       MsalBroadcastService,
       provideHttpClient(withInterceptorsFromDi()),
+      provideRouter(routes)
     ],
   }).catch((err) => console.error(err));
 }

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-login',

@@ -51,7 +51,7 @@ export class Login {
 testCallToBackend(): void {
   this.apiService.call({
     method: 'GET',
-    route: '',
+    route: 'departments',
   }).subscribe({
     next: (response) => {
       console.log('✅ Backend response:', response);

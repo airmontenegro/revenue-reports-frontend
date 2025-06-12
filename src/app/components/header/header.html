@@ -30,10 +30,10 @@
     <!-- Dropdown Menu -->
     <div
       *ngIf="dropdownOpen"
-      class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-20"
+      class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg"style="z-index: 9999;"
     >
-      <a [routerLink]="'/profile'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 z-20">Profile</a>
-      <a (click)="logout()" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+      <a [routerLink]="'/profile'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 z-50">Profile</a>
+      <a (click)="logout()" class="cursor-pointer block text-left px-4 py-2 text-gray-700 hover:bg-gray-100 z-50" style="z-index: 9999;">Logout</a>
     </div>
   </div>
 </div>

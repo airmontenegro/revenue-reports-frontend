@@ -1,4 +1,35 @@
 <div class="bg-white p-4 my-5 rounded-md bg-opacity-50">
+    <div class="flex flex-col md:flex-row w-full justify-between">
+    <div *ngIf="user" class=" mt-10 p-6 bg-white rounded-2xl shadow-lg">
+        <div class="flex justify-center mt-6">
+            <!-- Show user photo if available -->
+            <img *ngIf="userPhoto; else initialsFallback"
+                [src]="userPhoto"
+                alt="User Photo"
+                class="w-32 h-32 rounded-full border-2 border-gray-300 shadow-lg object-cover" />
 
-    <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias minima suscipit at libero ab iusto pariatur, ea ut, blanditiis, nisi saepe quam. Illum alias voluptate commodi sit, fugiat necessitatibus quo.</p>
+            <!-- Show initials if photo is not available -->
+            <ng-template #initialsFallback>
+                <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-2xl font-semibold text-gray-700 border-2 border-gray-300 shadow-lg">
+                {{ userInitials }}
+                </div>
+            </ng-template>
+        </div>
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">User Profile</h2>
+        <div class="space-y-2 text-sm text-gray-700">
+            <div><span class="font-semibold">Full Name:</span> {{ user.displayName }}</div>
+            <div><span class="font-semibold">Given Name:</span> {{ user.givenName }}</div>
+            <div><span class="font-semibold">Surname:</span> {{ user.surname }}</div>
+            <div><span class="font-semibold">Job Title:</span> {{ user.jobTitle || '—' }}</div>
+            <div><span class="font-semibold">Email:</span> {{ user.mail }}</div>
+            <div><span class="font-semibold">Username:</span> {{ user.userPrincipalName }}</div>
+            <div><span class="font-semibold">Mobile:</span> {{ user.mobilePhone || '—' }}</div>
+            <div><span class="font-semibold">Office:</span> {{ user.officeLocation || '—' }}</div>
+            <div><span class="font-semibold">Language:</span> {{ user.preferredLanguage || '—' }}</div>
+            <div><span class="font-semibold">User ID:</span> {{ user.id }}</div>
+        </div>
+    </div>
+
+    </div>
+
 </div>

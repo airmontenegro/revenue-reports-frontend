@@ -14,16 +14,10 @@ import {
   Observable,
   of,
 } from 'rxjs';
+import { ApiCallOptions } from '../interfaces/ApiCallOptions.interface';
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-interface ApiCallOptions {
-  method: HttpMethod;
-  route: string;
-  body?: any;
-  params?: Record<string, string | number | boolean>;
-  skipErrorHandling?: boolean;
-}
+
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {

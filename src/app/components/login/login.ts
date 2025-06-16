@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import { HttpMethod } from '../../interfaces/httpMethod.interface';
 
 @Component({
   selector: 'app-login',
@@ -50,7 +51,7 @@ export class Login {
 
 testCallToBackend(): void {
   this.apiService.call({
-    method: 'GET',
+    method: HttpMethod.GET,
     route: 'departments',
   }).subscribe({
     next: (response) => {

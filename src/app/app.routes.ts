@@ -4,6 +4,7 @@ import { AdminDashboard } from './components/admin-dashboard/admin-dashboard';
 import { Login } from './components/login/login';
 import { AdminGroupGuard } from './admin-group.guard';
 import { UserProfile } from './components/user-profile/user-profile';
+import { ExcelCompare } from './components/excel-compare/excel-compare';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -11,5 +12,8 @@ export const routes: Routes = [
   { path: 'admin', component: AdminDashboard,  canActivate: [AdminGroupGuard], },
   {
     path: 'profile', component: UserProfile 
+  },
+  {
+    path: 'compare' , component: ExcelCompare
   }
 ];

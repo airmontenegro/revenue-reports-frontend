@@ -1,15 +1,33 @@
+<!-- Upload Hitit File -->
 <button 
-  (click)="triggerFileInput()" 
-  class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow"
+  (click)="triggerHititInput()" 
+  class="bg-green-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
 >
-  Select Excel Files
+  Upload Hitit File
+</button>
+
+<input 
+  type="file" 
+  #hititInput 
+  style="display: none" 
+  accept=".xls,.xlsx"
+  (change)="handleHititFile($event)"
+/>
+
+<!-- Upload Hipotekarna Bank Files -->
+<button 
+  (click)="triggerBankInput()" 
+  [disabled]="!hititFileLoaded"
+  class="ml-4 bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 shadow"
+>
+  Upload Hipotekarna Files
 </button>
 
 <input 
   type="file" 
   multiple 
-  #fileInput 
+  #bankInput 
   style="display: none" 
-  accept=".csv"
-  (change)="handleFiles($event)"
+  accept=".xls,.xlsx"
+  (change)="handleBankFiles($event)"
 />

@@ -43,9 +43,9 @@ export class Login {
 
   checkRedirect() {
       if(this.authResult.account.idTokenClaims.groups.includes(this.adminGroup)) {
-        this.router.navigate(['/admin'])
+        this.router.navigate(['/compare'])
       }else{
-        this.router.navigate(['/dashboard'])
+        this.router.navigate(['/compare'])
       }
   }
 

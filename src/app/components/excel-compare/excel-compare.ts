@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 
@@ -7,6 +8,7 @@ import * as XLSX from 'xlsx';
   templateUrl: './excel-compare.html',
   styleUrls: ['./excel-compare.scss'],
   standalone: true,
+  imports: [CommonModule]
 })
 export class ExcelCompare {
   @ViewChild('hititInput') hititInputRef!: ElementRef<HTMLInputElement>;
@@ -17,6 +19,7 @@ export class ExcelCompare {
   bankData: any[][] = [];
   hititDate: string = '';
   filteredBankData: any[] = [];
+  comparisonResults: any[] = [];
 
 
   // Trigger hidden file input
@@ -236,13 +239,13 @@ const normalizeAmountToNumber = (val: any): number => {
     const tb = toMinutes(b.Time) ?? 0;
     return ta - tb;
   });
-
-  const ws = XLSX.utils.json_to_sheet(merged);
+ this.comparisonResults = merged;
+}
+exportToExcel() {
+  const ws = XLSX.utils.json_to_sheet(this.comparisonResults);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'MergedByTime');
-  XLSX.writeFile(wb, 'unmatched_side_by_side_by_time.xlsx');
-
-  console.log('✅ Exported: unmatched_side_by_side_by_time.xlsx');
+  XLSX.utils.book_append_sheet(wb, ws, 'Rezultati');
+  XLSX.writeFile(wb, 'rezultati_usklađivanja.xlsx');
 }
 
 

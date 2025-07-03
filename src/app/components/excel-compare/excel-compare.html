@@ -1,33 +1,76 @@
-<!-- Upload Hitit File -->
-<button 
-  (click)="triggerHititInput()" 
-  class="bg-green-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
->
-  Upload Hitit File
-</button>
+<div class="text-center text-gray-700 py-8">
+  <h1 class="text-4xl font-bold mb-2">Alat za Upoređivanje Transakcija</h1>
+  <p class="text-lg mb-6 font-bold w-1/2 mx-auto mt-8">
+    Uploadujete  <strong>Hitit</strong> izveštaj i jedan ili više <strong>Hipotekarna Banka</strong> fajlova kako biste uporedili transakcije po vremenu i iznosu. Nepodudarajući zapisi biće prikazani uporedno i eksportovani.
+  </p>
 
-<input 
-  type="file" 
-  #hititInput 
-  style="display: none" 
-  accept=".xls,.xlsx"
-  (change)="handleHititFile($event)"
-/>
+  <div class="flex justify-center gap-4 mb-4">
+    <button 
+      (click)="triggerHititInput()" 
+      class="bg-green-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
+    >
+      Uploaduj Hitit fajl
+    </button>
 
-<!-- Upload Hipotekarna Bank Files -->
-<button 
-  (click)="triggerBankInput()" 
-  [disabled]="!hititFileLoaded"
-  class="ml-4 bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 shadow"
->
-  Upload Hipotekarna Files
-</button>
+    <button 
+      (click)="triggerBankInput()" 
+      [disabled]="!hititFileLoaded"
+      class="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200 shadow"
+    >
+      Uploaduj fajlove Hipotekarne banke
+    </button>
+  </div>
 
-<input 
-  type="file" 
-  multiple 
-  #bankInput 
-  style="display: none" 
-  accept=".xls,.xlsx"
-  (change)="handleBankFiles($event)"
-/>
+  <!-- Skriveni ulazi -->
+  <input 
+    type="file" 
+    #hititInput 
+    style="display: none" 
+    accept=".xls,.xlsx"
+    (change)="handleHititFile($event)"
+  />
+
+  <input 
+    type="file" 
+    #bankInput 
+    style="display: none" 
+    multiple 
+    accept=".xls,.xlsx"
+    (change)="handleBankFiles($event)"
+  />
+</div>
+
+
+<div *ngIf="comparisonResults?.length" class="h-[300px] overflow-auto bg-white p-4 rounded-lg shadow mt-8">
+  <h2 class="text-xl font-bold mb-4 text-gray-800">Rezultati poređenja transakcija</h2>
+
+  <table class="min-w-full border border-gray-300 text-sm text-left bg-white">
+    <thead>
+      <tr>
+        <th class="border px-4 py-2 font-semibold bg-white">Vrijeme</th>
+        <th class="border px-4 py-2 font-semibold bg-white">Hitit Iznos</th>
+        <th class="border px-4 py-2 font-semibold bg-white">Banka Iznos</th>
+        <th class="border px-4 py-2 font-semibold bg-white">Detalji Hitit</th>
+        <th class="border px-4 py-2 font-semibold bg-white">Detalji Banka</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of comparisonResults">
+        <td class="border px-4 py-1 bg-white">{{ row.Time }}</td>
+        <td class="border px-4 py-1 bg-white">{{ row.Hitit_Paid }}</td>
+        <td class="border px-4 py-1 bg-white">{{ row.Bank_Iznos }}</td>
+        <td class="border px-4 py-1 bg-white">{{ row.Hitit_PNR || '—' }}</td>
+        <td class="border px-4 py-1 bg-white">{{ row.Bank_Broj_kart || '—' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="flex justify-end">
+  <button
+    *ngIf="comparisonResults?.length"
+    (click)="exportToExcel()"
+    class="mt-10 bg-blue-700 text-white px-5 py-2 rounded-full shadow-lg hover:bg-blue-800 transition"
+  >
+    ⬇️ Izvezi u Excel
+  </button>
+</div>

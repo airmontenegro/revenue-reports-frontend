@@ -48,7 +48,6 @@ export class ExcelCompare {
     }
 
     let rawDate = this.hititData[0]?.['Slip Date'] || '';
-    let hititDate = '';
 
     if (rawDate) {
       console.log('parsed date ', rawDate)
@@ -86,7 +85,6 @@ export class ExcelCompare {
 
       if (this.hititDate) {
         const merged = this.bankData.flat();
-        console.log('Merged bank files data', merged)
         this.filteredBankData = merged.filter(record => {
           const valuta = record.Valuta;
           if (!valuta) return false;
@@ -100,6 +98,7 @@ export class ExcelCompare {
         console.log('✅ Filtered bank data by Hitit date:', this.filteredBankData);
       }
     }
+    this.compareByHourAndMinute(this.hititData, this.filteredBankData);
   }
 
   readExcelFile(file: File): any {
@@ -122,5 +121,130 @@ export class ExcelCompare {
     });
 
   }
+
+compareByHourAndMinute(hititData: any[], bankData: any[]) {
+  const TIME_TOLERANCE_MINUTES = 2;
+
+  const extractTimeHHMM = (str: string): string => {
+    if (!str) return '';
+    const match = str.match(/\b(\d{2}):(\d{2})/);
+    return match ? `${match[1]}:${match[2]}` : '';
+  };
+
+  const toMinutes = (str: string): number | null => {
+    const match = str?.match(/\b(\d{2}):(\d{2})/);
+    if (!match) return null;
+    return parseInt(match[1]) * 60 + parseInt(match[2]);
+  };
+
+  const sortByTime = (arr: any[], field: string) =>
+    arr.slice().sort((a, b) =>
+      extractTimeHHMM(a[field]).localeCompare(extractTimeHHMM(b[field]))
+    );
+
+const normalizeAmountToNumber = (val: any): number => {
+  if (val === null || val === undefined) return NaN;
+
+  const raw = val.toString().trim();
+
+  // Remove non-digit, non-dot, non-comma, non-minus characters
+  const cleaned = raw.replace(/[^\d.,-]/g, '');
+
+  // Case: 1,081.44 -> remove comma
+  if (cleaned.match(/^\d{1,3}(,\d{3})+(\.\d+)?$/)) {
+    return parseFloat(cleaned.replace(/,/g, ''));
+  }
+
+  // Case: 1.081,44 -> European style
+  if (cleaned.includes('.') && cleaned.includes(',')) {
+    return parseFloat(cleaned.replace(/\./g, '').replace(',', '.'));
+  }
+
+  // Case: 1081,44 -> comma as decimal
+  if (cleaned.includes(',') && !cleaned.includes('.')) {
+    return parseFloat(cleaned.replace(',', '.'));
+  }
+
+  // Case: 1081.44 -> dot as decimal
+  return parseFloat(cleaned);
+};
+
+  const sortedHitit = sortByTime(hititData, 'Slip Date');
+  const sortedBank = sortByTime(bankData, 'Vrijeme');
+
+  const merged: any[] = [];
+
+  for (const hitit of sortedHitit) {
+    const hititTime = toMinutes(hitit['Slip Date']);
+    const hititPaid = normalizeAmountToNumber(hitit['Paid']);
+    let matchedBank: any = null;
+
+    for (const bank of sortedBank) {
+      const bankTime = toMinutes(bank['Vrijeme']);
+      const bankIznos = normalizeAmountToNumber(bank['Iznos']);
+
+      if (
+        hititTime !== null &&
+        bankTime !== null &&
+        Math.abs(hititTime - bankTime) <= TIME_TOLERANCE_MINUTES &&
+        hititPaid == bankIznos
+      ) {
+        matchedBank = bank;
+        break;
+      }
+    }
+
+    if (!matchedBank) {
+      const time = extractTimeHHMM(hitit['Slip Date']);
+      const row: any = { Time: time };
+      Object.entries(hitit).forEach(([key, val]) => {
+        row[`Hitit_${key}`] = val;
+      });
+      merged.push(row);
+    }
+  }
+
+  for (const bank of sortedBank) {
+    const bankTime = toMinutes(bank['Vrijeme']);
+    const bankIznos = normalizeAmountToNumber(bank['Iznos']);
+
+    const matchedInHitit = sortedHitit.some(hitit => {
+      const hititTime = toMinutes(hitit['Slip Date']);
+      const hititPaid = normalizeAmountToNumber(hitit['Paid']);
+
+      return (
+        hititTime !== null &&
+        bankTime !== null &&
+        Math.abs(hititTime - bankTime) <= TIME_TOLERANCE_MINUTES &&
+        hititPaid === bankIznos
+      );
+    });
+
+    if (!matchedInHitit) {
+      const time = extractTimeHHMM(bank['Vrijeme']);
+      const row: any = { Time: time };
+      Object.entries(bank).forEach(([key, val]) => {
+        row[`Bank_${key}`] = val;
+      });
+      merged.push(row);
+    }
+  }
+
+  // Final sort by time
+  merged.sort((a, b) => {
+    const ta = toMinutes(a.Time) ?? 0;
+    const tb = toMinutes(b.Time) ?? 0;
+    return ta - tb;
+  });
+
+  const ws = XLSX.utils.json_to_sheet(merged);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'MergedByTime');
+  XLSX.writeFile(wb, 'unmatched_side_by_side_by_time.xlsx');
+
+  console.log('✅ Exported: unmatched_side_by_side_by_time.xlsx');
+}
+
+
 
 }

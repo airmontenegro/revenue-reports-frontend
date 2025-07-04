@@ -5,6 +5,7 @@ import { Login } from './components/login/login';
 import { AdminGroupGuard } from './admin-group.guard';
 import { UserProfile } from './components/user-profile/user-profile';
 import { ExcelCompare } from './components/excel-compare/excel-compare';
+import { CompareWrapper } from './components/compare-wrapper/compare-wrapper';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -14,6 +15,6 @@ export const routes: Routes = [
     path: 'profile', component: UserProfile 
   },
   {
-    path: 'compare' , component: ExcelCompare
+    path: 'compare' , component: CompareWrapper
   }
 ];

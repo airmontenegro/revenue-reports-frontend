@@ -1,40 +1,31 @@
-
 <div class="text-center text-gray-700">
-  <h1 class="text-4xl font-bold mb-2">Alat za Upoređivanje Transakcija</h1>
+    <h1 class="text-4xl font-bold mt-4">Alat za Upoređivanje Transakcija</h1>
 </div>
 <div class="w-full mx-auto">
-  <!-- Tabs -->
-  <div class="flex border-b border-gray-300 mb-4">
-    <button
-      (click)="activeTab = 'daily'"
-      [ngClass]="{
+    <!-- Tabs -->
+    <div class="flex border-b border-gray-300 mb-4">
+        <button (click)="activeTab = 'daily'" [ngClass]="{
         'border-b-2 border-blue-600 text-blue-600': activeTab === 'daily',
         'text-gray-500': activeTab !== 'daily'
-      }"
-      class="px-4 py-2 font-medium focus:outline-none"
-    >
-      Dnevni pregled
-    </button>
-    <button
-      (click)="activeTab = 'monthly'"
-      [ngClass]="{
+      }" class="px-4 py-2 font-medium focus:outline-none">
+            Dnevni pregled
+        </button>
+        <button (click)="activeTab = 'monthly'" [ngClass]="{
         'border-b-2 border-blue-600 text-blue-600': activeTab === 'monthly',
         'text-gray-500': activeTab !== 'monthly'
-      }"
-      class="px-4 py-2 font-medium focus:outline-none"
-    >
-      Mjesečni pregled
-    </button>
-  </div>
+      }" class="px-4 py-2 font-medium focus:outline-none">
+            Mjesečni pregled
+        </button>
+    </div>
 
-  <!-- Tab Content -->
-  <div *ngIf="activeTab === 'daily'">
-    <!-- Your daily comparison UI here -->
-<app-excel-compare></app-excel-compare>
-  </div>
+    <!-- Tab Content -->
+    <div *ngIf="activeTab === 'daily'">
+        <!-- Your daily comparison UI here -->
+        <app-excel-compare></app-excel-compare>
+    </div>
 
-  <div *ngIf="activeTab === 'monthly'">
-    <!-- Your monthly comparison UI here -->
-    <p class="text-gray-700">Ovde ide mjesečni prikaz rezultata upoređivanja.</p>
-  </div>
+    <div *ngIf="activeTab === 'monthly'">
+        <!-- Your monthly comparison UI here -->
+        <app-exel-compare-monthly></app-exel-compare-monthly>
+    </div>
 </div>

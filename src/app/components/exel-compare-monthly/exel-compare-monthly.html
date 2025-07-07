@@ -1,6 +1,6 @@
 <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6 mt-8 text-gray-800">
   <!-- Section Title -->
-  <h2 class="text-2xl font-bold text-center mb-2">Dnevno Poređenje Transakcija</h2>
+  <h2 class="text-2xl font-bold text-center mb-2">Mjesečno Poređenje Transakcija</h2>
 
   <!-- Overview / Instructions -->
   <p class="text-sm text-center mb-6 w-full sm:w-3/4 mx-auto">
@@ -11,14 +11,14 @@
   <!-- Upload Buttons -->
   <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
     <button
-      (click)="triggerHititInput()"
+      (click)="triggerHititUpload()"
       class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition shadow"
     >
       Uploaduj Hitit fajl
     </button>
 
     <button
-      (click)="triggerBankInput()"
+      (click)="triggerBankUpload()"
       [disabled]="!hititFileLoaded"
       class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition shadow"
     >
@@ -31,7 +31,7 @@
     type="file"
     #hititInput
     accept=".xls,.xlsx"
-    (change)="handleHititFile($event)"
+    (change)="handleHititUpload($event)"
     hidden
   />
   <input
@@ -39,7 +39,7 @@
     #bankInput
     accept=".xls,.xlsx"
     multiple
-    (change)="handleBankFiles($event)"
+    (change)="handleBankUpload($event)"
     hidden
   />
 

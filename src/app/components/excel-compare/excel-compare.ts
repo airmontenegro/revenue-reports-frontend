@@ -31,7 +31,6 @@ export class ExcelCompare {
     this.bankInputRef.nativeElement.click();
   }
 
-  // Handle selection of two files
   async handleHititFile(event: Event) {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];

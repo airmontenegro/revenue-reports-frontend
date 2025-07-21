@@ -6,34 +6,30 @@
     </a>
   </div>
 
-  <!-- Profile Dropdown -->
-  <div class="relative" (click)="toggleDropdown()" tabindex="0">
 
-<svg 
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  viewBox="0 0 24 24"
-  stroke-width="1.5"
-  stroke="currentColor"
-  class="size-10 cursor-pointer text-gray-300 hover:text-gray-100 transition-colors duration-200"
->
-  <path 
-    stroke-linecap="round" 
-    stroke-linejoin="round"
-    d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-  />
-</svg>
+<div class="flex items-center space-x-6">
+    <!-- Compare Menu Item -->
+         <a [routerLink]="'/onboarding'" class="text-gray-300 hover:text-gray-100 transition-colors duration-200">
+      Obuke
+    </a>
+    <a [routerLink]="'/compare'" class="text-gray-300 hover:text-gray-100 transition-colors duration-200">
+      Upoređeivanje dokumenta
+    </a>
 
-
-
-
-    <!-- Dropdown Menu -->
-    <div
-      *ngIf="dropdownOpen"
-      class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg"style="z-index: 9999;"
-    >
-      <a [routerLink]="'/profile'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 z-50">Profile</a>
-      <a (click)="logout()" class="cursor-pointer block text-left px-4 py-2 text-gray-700 hover:bg-gray-100 z-50" style="z-index: 9999;">Logout</a>
+    <!-- Profile Dropdown -->
+    <div class="relative" (click)="toggleDropdown()" tabindex="0">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="size-10 cursor-pointer text-gray-300 hover:text-gray-100 transition-colors duration-200">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+      </svg>
+      <!-- Dropdown Menu -->
+      <div *ngIf="dropdownOpen" class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg"
+        style="z-index: 9999;">
+        <a [routerLink]="'/profile'" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 z-50">Profile</a>
+        <a (click)="logout()" class="cursor-pointer block text-left px-4 py-2 text-gray-700 hover:bg-gray-100 z-50"
+          style="z-index: 9999;">Logout</a>
+      </div>
     </div>
   </div>
 </div>

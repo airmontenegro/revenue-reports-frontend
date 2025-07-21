@@ -1,0 +1,46 @@
+<div class="w-full mx-auto p-6 bg-white rounded shadow">
+  <h2 class="text-2xl font-bold mb-4">{{ isEdit ? 'Edit' : 'Create' }} Onboarding Lesson</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <input class="border p-2 w-full mb-3 rounded" [(ngModel)]="lesson.title" name="title" placeholder="Title" required />
+    <input class="border p-2 w-full mb-3 rounded" [(ngModel)]="lesson.shortDescription" name="shortDescription" placeholder="Short Description" />
+
+    <label class="block mb-1 font-semibold">Description</label>
+    <quill-editor [(ngModel)]="lesson.description" name="description" [styles]="{ height: '500px' }" class="mb-3"></quill-editor>
+
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold mb-2">Questions</h3>
+      <div *ngFor="let q of lesson.questions; let i = index" class="border rounded p-3 mb-3">
+        <input class="border p-2 w-full mb-2 rounded" [(ngModel)]="q.questionText" [name]="'questionText' + i" placeholder="Question text" />
+
+        <div class="space-y-2">
+          <div *ngFor="let answer of q.answers; let j = index" class="flex items-center gap-2">
+            <input
+              class="border p-1 flex-1 rounded"
+              [(ngModel)]="answer.label"
+              [name]="'answerLabel' + i + '_' + j"
+              placeholder="Answer label"
+            />
+            <input
+              type="radio"
+              [name]="'correctAnswer' + i"
+              [checked]="answer.isCorrect"
+              (change)="setCorrectAnswer(i, j)"
+            />
+            <span class="text-sm text-gray-600">Mark as correct</span>
+          </div>
+        </div>
+
+        <button type="button" (click)="removeQuestion(i)" class="text-red-500 mt-2">Remove Question</button>
+      </div>
+
+      <button type="button" (click)="addQuestion()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+        + Add Question
+      </button>
+    </div>
+
+    <button type="submit" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+      {{ isEdit ? 'Update Lesson' : 'Create Lesson' }}
+    </button>
+  </form>
+</div>

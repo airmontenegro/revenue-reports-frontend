@@ -23,7 +23,19 @@ export class CreateUpdateOnboardingLesson {
     questions: [],
   };
 
-  constructor(private lessonApi: LessonApiService) {}
+  modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['image', 'link'],
+      [{ 'align': [] }],
+      [{ 'header': [1, 2, 3, false] }],
+    ],
+    imageResize: {
+      modules: ['Resize', 'DisplaySize', 'Toolbar'],
+    },
+  };
+  constructor(private lessonApi: LessonApiService) { }
 
   ngOnInit() {
     if (this.isEdit && this.lessonId) {

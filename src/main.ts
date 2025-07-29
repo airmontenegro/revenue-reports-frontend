@@ -11,7 +11,7 @@ import { PublicClientApplication } from '@azure/msal-browser';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
-
+import '../src/app/setup/quill-register';
 const msalInstance = new PublicClientApplication({
   auth: {
     clientId: 'ecaca527-492f-4199-ad73-eec3edbbedc2', // InfoWall-frontend

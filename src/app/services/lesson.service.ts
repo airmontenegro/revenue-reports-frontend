@@ -4,6 +4,28 @@ import { Observable } from 'rxjs';
 import { Lesson } from '../interfaces/lesson.interface';
 import { HttpMethod } from '../interfaces/httpMethod.interface';
 
+
+export interface UserProgress {
+  id: string;
+  userId: string;
+  userFirstName: string;
+  userLastName: string;
+  isCompleted: boolean;
+  completedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  lesson: {
+    id: string;
+    title: string;
+    // Add more lesson fields if needed
+  };
+  answers: {
+    id: string;
+    questionId: string;
+    selectedAnswerId: string;
+  }[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class LessonApiService {
   private readonly baseRoute = 'onboarding-lessons';

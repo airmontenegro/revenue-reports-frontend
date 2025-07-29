@@ -1,0 +1,65 @@
+/* Main Quill editor container */
+.ql-container {
+  font-family: "Roboto", "Helvetica", sans-serif;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.ql-container:hover {
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Toolbar styling */
+.ql-toolbar {
+  border: 1px solid #ddd;
+  border-bottom: none;
+  background: #f8f9fa;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  padding: 8px;
+}
+
+.ql-toolbar button:hover,
+.ql-toolbar .ql-picker-label:hover,
+.ql-toolbar .ql-picker-item:hover {
+  background: #e9ecef;
+  border-radius: 6px;
+}
+
+/* Editor content area */
+.ql-editor {
+  min-height: 200px;
+  padding: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.ql-editor p {
+  margin-bottom: 12px;
+}
+
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+/* Focus state */
+.ql-container.ql-snow:focus-within {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+
+/* Toolbar buttons active state */
+.ql-toolbar button.ql-active,
+.ql-toolbar .ql-picker-label.ql-active {
+  background: #3f51b5;
+  color: #fff;
+  border-radius: 6px;
+}

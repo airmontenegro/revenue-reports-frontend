@@ -6,7 +6,7 @@
     <input class="border p-2 w-full mb-3 rounded" [(ngModel)]="lesson.shortDescription" name="shortDescription" placeholder="Short Description" />
 
     <label class="block mb-1 font-semibold">Description</label>
-    <quill-editor [(ngModel)]="lesson.description" name="description" [styles]="{ height: '500px' }" class="mb-3"></quill-editor>
+    <quill-editor [(ngModel)]="lesson.description" [modules]="modules" name="description" [styles]="{ height: '500px' }" class="mb-3 custom-quill-wrapper" theme="snow"></quill-editor>
 
     <div class="mt-6">
       <h3 class="text-xl font-semibold mb-2">Questions</h3>

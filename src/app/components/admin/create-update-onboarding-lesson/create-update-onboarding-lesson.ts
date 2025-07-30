@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { Lesson } from '../../../interfaces/lesson.interface';
 import { LessonApiService } from '../../../services/lesson.service';
+import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-create-update-onboarding-lesson',
@@ -12,10 +14,10 @@ import { LessonApiService } from '../../../services/lesson.service';
   templateUrl: './create-update-onboarding-lesson.html',
   styleUrl: './create-update-onboarding-lesson.scss',
 })
-export class CreateUpdateOnboardingLesson {
+export class CreateUpdateOnboardingLesson implements OnDestroy{
   @Input() isEdit = false;
   @Input() lessonId?: string;
-
+  ngUnsubscribe: Subject<any> = new Subject();
   lesson: Lesson = {
     title: '',
     shortDescription: '',
@@ -35,11 +37,15 @@ export class CreateUpdateOnboardingLesson {
       modules: ['Resize', 'DisplaySize', 'Toolbar'],
     },
   };
-  constructor(private lessonApi: LessonApiService) { }
+  constructor(private route: ActivatedRoute, private lessonApi: LessonApiService) { }
 
   ngOnInit() {
+    this.lessonId = this.route.snapshot.paramMap.get('id') as any;
+    this.isEdit = !!this.lessonId;
     if (this.isEdit && this.lessonId) {
-      this.lessonApi.getLesson(this.lessonId).subscribe({
+      this.lessonApi.getLesson(this.lessonId)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
         next: (data) => (this.lesson = data),
         error: (err) => console.error('❌ Failed to load lesson', err),
       });
@@ -69,15 +75,24 @@ export class CreateUpdateOnboardingLesson {
 
   onSubmit() {
     if (this.isEdit && this.lessonId) {
-      this.lessonApi.updateLesson(this.lessonId, this.lesson).subscribe({
+      this.lessonApi.updateLesson(this.lessonId, this.lesson)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
         next: () => console.log('✅ Lesson updated successfully'),
         error: (err) => console.error('❌ Update failed', err),
       });
     } else {
-      this.lessonApi.createLesson(this.lesson).subscribe({
+      this.lessonApi.createLesson(this.lesson)
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe({
         next: () => console.log('✅ Lesson created successfully'),
         error: (err) => console.error('❌ Creation failed', err),
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next(null);
+    this.ngUnsubscribe.complete();
   }
 }

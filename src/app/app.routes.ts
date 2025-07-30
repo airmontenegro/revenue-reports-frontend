@@ -16,6 +16,7 @@ export const routes: Routes = [
     path: 'admin', component: AdminDashboard, canActivate: [AdminGroupGuard], children: [
       { path: 'lessons', component: OnbordingLessonList },
       { path: 'lesson/new', component: CreateUpdateOnboardingLesson },
+      { path: 'lessons/edit/:id', component: CreateUpdateOnboardingLesson },
       { path: '', redirectTo: 'lessons', pathMatch: 'full' },
     ],
   },

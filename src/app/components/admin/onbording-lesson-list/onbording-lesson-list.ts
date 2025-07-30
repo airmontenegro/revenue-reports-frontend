@@ -40,8 +40,7 @@ export class OnbordingLessonList implements OnDestroy {
   }
 
   editLesson(id: any): void {
-    this.router.navigate(['/lessons/edit', id]);
-  }
+this.router.navigate(['/admin/lessons/edit', id]);  }
 
   deleteLesson(id: any): void {
     if (confirm('Are you sure you want to delete this lesson?')) {

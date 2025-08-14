@@ -1,0 +1,118 @@
+<div class="w-full mx-auto p-6 bg-white rounded shadow space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold">
+      {{ isEdit ? 'Edit' : 'Create' }} Category
+    </h2>
+
+    <button
+      type="button"
+      class="text-sm text-gray-600 hover:text-gray-800"
+      routerLink="/categories">
+      ← Back
+    </button>
+  </div>
+
+  <div *ngIf="loadError(); else formBlock" class="text-red-600">
+    {{ loadError() }}
+  </div>
+
+  <ng-template #formBlock>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Name -->
+      <div>
+        <label class="block font-semibold mb-1">Name</label>
+        <input
+          formControlName="name"
+          type="text"
+          class="border p-2 w-full rounded"
+          placeholder="e.g. Workplace Basics" />
+        <div class="text-sm text-red-600 mt-1" *ngIf="f.name.touched && f.name.errors">
+          <span *ngIf="f.name.errors['required']">Name is required.</span>
+          <span *ngIf="f.name.errors['maxlength']">Max 120 characters.</span>
+        </div>
+      </div>
+
+      <!-- Slug -->
+      <div>
+        <label class="block font-semibold mb-1">Slug</label>
+        <input
+          formControlName="slug"
+          type="text"
+          class="border p-2 w-full rounded"
+          placeholder="workplace-basics" />
+        <div class="text-sm text-gray-500 mt-1">
+          Used in URLs. Auto-filled from name; you can edit.
+        </div>
+        <div class="text-sm text-red-600 mt-1" *ngIf="f.slug.touched && f.slug.errors">
+          <span *ngIf="f.slug.errors['required']">Slug is required.</span>
+          <span *ngIf="f.slug.errors['maxlength']">Max 140 characters.</span>
+        </div>
+      </div>
+
+      <!-- Short Description -->
+      <div>
+        <label class="block font-semibold mb-1">Short Description</label>
+        <textarea
+          formControlName="shortDescription"
+          rows="3"
+          class="border p-2 w-full rounded"
+          placeholder="A brief description of this category"></textarea>
+        <div class="text-sm text-red-600 mt-1" *ngIf="f.shortDescription.touched && f.shortDescription.errors">
+          <span *ngIf="f.shortDescription.errors['maxlength']">Max 140 characters.</span>
+        </div>
+      </div>
+
+      <!-- Image URL -->
+      <div>
+        <label class="block font-semibold mb-1">Image URL</label>
+        <input
+          formControlName="imageUrl"
+          type="url"
+          class="border p-2 w-full rounded"
+          placeholder="https://example.com/image.png" />
+        <div class="text-sm text-gray-500 mt-1">
+          Optional. Use a public image link for the category cover.
+        </div>
+      </div>
+
+      <!-- Lessons picker -->
+      <div>
+        <label class="block font-semibold mb-2">Themes (Onboarding Lessons)</label>
+
+        <div class="flex flex-wrap gap-2">
+          <button
+            *ngFor="let l of lessons; trackBy: trackByLesson"
+            type="button"
+            (click)="toggleLesson(l.id)"
+            class="px-3 py-1 rounded-full border transition
+                   hover:bg-gray-50"
+            [class.bg-blue-600]="isSelected(l.id)"
+            [class.text-white]="isSelected(l.id)"
+            [class.border-blue-600]="isSelected(l.id)">
+            {{ l.title }}
+          </button>
+        </div>
+
+        <div class="text-sm text-gray-500 mt-2" *ngIf="!f.lessonIds.value?.length">
+          No lessons selected.
+        </div>
+
+        <div class="mt-2">
+          <span class="text-xs text-gray-600">Selected IDs:</span>
+          <div class="text-xs text-gray-700 break-words">{{ f.lessonIds.value.join(', ') }}</div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="pt-2">
+        <button
+          type="submit"
+          [disabled]="saving()"
+          class="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white px-4 py-2 rounded">
+          <span *ngIf="!saving()">{{ isEdit ? 'Update Category' : 'Create Category' }}</span>
+          <span *ngIf="saving()">Saving...</span>
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</div>

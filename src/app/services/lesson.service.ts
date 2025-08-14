@@ -5,26 +5,13 @@ import { Lesson } from '../interfaces/lesson.interface';
 import { HttpMethod } from '../interfaces/httpMethod.interface';
 
 
-export interface UserProgress {
-  id: string;
-  userId: string;
-  userFirstName: string;
-  userLastName: string;
-  isCompleted: boolean;
-  completedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  lesson: {
-    id: string;
-    title: string;
-    // Add more lesson fields if needed
-  };
-  answers: {
-    id: string;
-    questionId: string;
-    selectedAnswerId: string;
-  }[];
-}
+export type LessonDto = {
+  id?: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  isDeleted?: boolean;
+};
 
 @Injectable({ providedIn: 'root' })
 export class LessonApiService {
@@ -46,16 +33,16 @@ export class LessonApiService {
     });
   }
 
-  createLesson(lesson: Lesson): Observable<Lesson> {
-    return this.api.call<Lesson>({
+  createLesson(lesson: LessonDto): Observable<LessonDto> {
+    return this.api.call<LessonDto>({
       method: HttpMethod.POST,
       route: this.baseRoute,
       body: lesson,
     });
   }
 
-  updateLesson(id: string, lesson: Lesson): Observable<Lesson> {
-    return this.api.call<Lesson>({
+  updateLesson(id: string, lesson: LessonDto): Observable<LessonDto> {
+    return this.api.call<LessonDto>({
       method: HttpMethod.PUT,
       route: `${this.baseRoute}/${id}`,
       body: lesson,

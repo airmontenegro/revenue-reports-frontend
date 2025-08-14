@@ -1,30 +1,41 @@
-
-  <div class="flex min-h-[600px]">
-      <!-- Sidebar -->
-      <aside class="w-64 shadow-lg">
-        <div class="p-6 text-xl font-bold border-b">
-          Dashboard
-        </div>
-        <nav class="p-4">
-          <ul class="space-y-2">
-            <li>
-              <a routerLink="lessons" routerLinkActive="text-blue-600 font-semibold"
-                class="block p-2 rounded hover:bg-gray-200">
-                📄 Onboarding Lesson List
-              </a>
-            </li>
-            <li>
-              <a routerLink="lesson/new" routerLinkActive="text-blue-600 font-semibold"
-                class="block p-2 rounded hover:bg-gray-200">
-                ✏️ Create Onboarding Lesson
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </aside>
-
-      <!-- Main content -->
-      <main class="flex-1 p-6 overflow-auto">
-        <router-outlet></router-outlet>
-      </main>
+<div class="flex min-h-[600px]">
+  <!-- Sidebar -->
+  <aside class="w-64 shadow-lg">
+    <div class="p-6 text-xl font-bold border-b">
+      Dashboard
     </div>
+    <nav class="p-4">
+      <ul class="space-y-2">
+        <li>
+          <a routerLink="lessons" routerLinkActive="text-blue-600 font-semibold"
+            class="block p-2 rounded hover:bg-gray-200">
+            📄 Onboarding Lesson List
+          </a>
+        </li>
+        <li>
+          <a routerLink="lesson/new" routerLinkActive="text-blue-600 font-semibold"
+            class="block p-2 rounded hover:bg-gray-200">
+            ✏️ Create Onboarding Lesson
+          </a>
+        </li>
+        <li>
+          <a routerLink="categories" routerLinkActive="text-blue-600 font-semibold"
+            class="block p-2 rounded hover:bg-gray-200">
+            🗂️ Categories
+          </a>
+        </li>
+        <li>
+          <a routerLink="category/new" routerLinkActive="text-blue-600 font-semibold"
+            class="block p-2 rounded hover:bg-gray-200">
+            ➕ Create Category
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 p-6 overflow-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>

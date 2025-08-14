@@ -8,6 +8,8 @@ import { CompareWrapper } from './components/compare-wrapper/compare-wrapper';
 import { OnboardingWrapper } from './components/onboarding-wrapper/onboarding-wrapper';
 import { CreateUpdateOnboardingLesson } from './components/admin/create-update-onboarding-lesson/create-update-onboarding-lesson';
 import { OnbordingLessonList } from './components/admin/onbording-lesson-list/onbording-lesson-list';
+import { CategoryCreateUpdateComponent } from './components/category-create-update/category-create-update';
+import { CategoryListComponent } from './components/category-list/category-list';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -17,7 +19,10 @@ export const routes: Routes = [
       { path: 'lessons', component: OnbordingLessonList },
       { path: 'lesson/new', component: CreateUpdateOnboardingLesson },
       { path: 'lessons/edit/:id', component: CreateUpdateOnboardingLesson },
-      { path: '', redirectTo: 'lessons', pathMatch: 'full' },
+      // 📂 Categories
+      { path: 'categories', component: CategoryListComponent },
+      { path: 'category/new', component: CategoryCreateUpdateComponent },
+      { path: 'categories/edit/:id', component: CategoryCreateUpdateComponent }, { path: '', redirectTo: 'lessons', pathMatch: 'full' },
     ],
   },
   {

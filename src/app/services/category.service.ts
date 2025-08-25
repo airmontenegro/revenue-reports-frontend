@@ -1,11 +1,12 @@
 // src/app/services/category-api.service.ts
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { HttpMethod } from '../interfaces/httpMethod.interface';
+import { UploadParams, UploadService } from './upload.service';
 
 export interface CategoryDto {
-  id?: string;
+  id?: any;
   name: string;
   slug: string;
   shortDescription?: string | null;
@@ -19,7 +20,7 @@ export interface CategoryListItem extends CategoryDto {
 
 @Injectable({ providedIn: 'root' })
 export class CategoryApiService {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private uploads: UploadService) {}
 
   list(params?: { q?: string; page?: number; limit?: number }): Observable<CategoryListItem[]> {
     return this.api.call<CategoryListItem[]>({
@@ -57,5 +58,26 @@ export class CategoryApiService {
       method: HttpMethod.DELETE,
       route: `categories/${id}`,
     });
+  }
+
+  /** High-level helpers that include optional image upload */
+  createWithOptionalImage(dto: CategoryDto, file?: File, paths?: UploadParams): Observable<CategoryDto> {
+    const chain$ = file && paths
+      ? this.uploads.uploadFile(file, paths).pipe(
+          map(res => ({ ...dto, imageUrl: this.uploads.extractUrl(res) }))
+        )
+      : of(dto);
+
+    return chain$.pipe(switchMap(finalDto => this.create(finalDto)));
+  }
+
+  updateWithOptionalImage(id: string, dto: CategoryDto, file?: File, paths?: UploadParams): Observable<CategoryDto> {
+    const chain$ = file && paths
+      ? this.uploads.uploadFile(file, paths).pipe(
+          map(res => ({ ...dto, imageUrl: this.uploads.extractUrl(res) }))
+        )
+      : of(dto);
+
+    return chain$.pipe(switchMap(finalDto => this.update(id, finalDto)));
   }
 }

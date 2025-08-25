@@ -22,7 +22,7 @@ export const routes: Routes = [
       // 📂 Categories
       { path: 'categories', component: CategoryListComponent },
       { path: 'category/new', component: CategoryCreateUpdateComponent },
-      { path: 'categories/edit/:id', component: CategoryCreateUpdateComponent }, { path: '', redirectTo: 'lessons', pathMatch: 'full' },
+      { path: 'categories/edit/:slug', component: CategoryCreateUpdateComponent }, { path: '', redirectTo: 'lessons', pathMatch: 'full' },
     ],
   },
   {

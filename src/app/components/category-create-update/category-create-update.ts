@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, of, switchMap, takeUntil, tap, catchError } from 'rxjs';
 
-import { LessonApiService } from '../../services/lesson.service'; // <-- your existing service
+import { LessonApiService } from '../../services/lesson.service';
 import { CategoryApiService, CategoryDto } from '../../services/category.service';
 
-// shape we use to render lesson chips
+
 type LessonListItem = { id: string; title: string };
 
 @Component({
@@ -26,10 +26,10 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   isEdit = false;
-  categoryId?: string;
+  slug?: string;
   saving = signal(false);
   loadError = signal<string | null>(null);
-
+  categoryId : string ='';
   lessons: LessonListItem[] = [];
 
   form: FormGroup<{
@@ -42,15 +42,25 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
     name: ['', [Validators.required, Validators.maxLength(120)]],
     slug: ['', [Validators.required, Validators.maxLength(140)]],
     shortDescription: this.fb.control<string | null>('', [Validators.maxLength(140)]),
-    imageUrl: this.fb.control<string | null>('', []),
+    imageUrl: this.fb.control<string | null>('', []), // will be set by upload response
     lessonIds: this.fb.nonNullable.control<string[]>([]),
   });
 
-  ngOnInit(): void {
-    this.categoryId = this.route.snapshot.paramMap.get('id') || undefined;
-    this.isEdit = !!this.categoryId;
+  // local UI state for selected file
+  selectedFile: File | null = null;
+  previewSrc: string | null = null;
 
-    // auto-slug
+  // where to store images in SharePoint (adjust to your tenant)
+  private readonly sharepointPaths = {
+    sitePath: '/sites/MySite',
+    folderPath: 'Shared Documents/Images/Categories',
+  };
+
+  ngOnInit(): void {
+    this.slug = this.route.snapshot.paramMap.get('slug') || undefined;
+    this.isEdit = !!this.slug;
+
+    // auto-generate slug from name (create mode)
     this.form.controls.name.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((v) => {
@@ -61,9 +71,8 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
         }
       });
 
-    // load lessons via your LessonApiService
-    this.lessonsApi
-      .getAllLessons()
+    // load lessons for chips
+    this.lessonsApi.getAllLessons()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (items) => {
@@ -72,10 +81,9 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
         error: () => this.loadError.set('Failed to load lessons'),
       });
 
-    // load existing category in edit mode
-    if (this.isEdit && this.categoryId) {
-      this.categories
-        .get(this.categoryId)
+    // edit mode: load category
+    if (this.isEdit && this.slug) {
+      this.categories.get(this.slug)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (cat) => this.patchForm(cat),
@@ -85,6 +93,7 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   }
 
   private patchForm(cat: CategoryDto) {
+    this.categoryId = cat.id;
     this.form.patchValue({
       name: cat.name ?? '',
       slug: cat.slug ?? '',
@@ -94,6 +103,38 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
     });
   }
 
+  // === Image selection & preview ===
+  onFileSelected(evt: Event) {
+    const input = evt.target as HTMLInputElement;
+    const file = (input.files && input.files[0]) || null;
+    this.clearPreviewOnly();
+
+    if (!file) {
+      this.selectedFile = null;
+      return;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      this.loadError.set('Image exceeds 20 MB limit.');
+      return;
+    }
+
+    this.selectedFile = file;
+    this.previewSrc = URL.createObjectURL(file);
+  }
+
+  clearSelectedFile() {
+    this.selectedFile = null;
+    this.clearPreviewOnly();
+  }
+
+  private clearPreviewOnly() {
+    if (this.previewSrc) {
+      URL.revokeObjectURL(this.previewSrc);
+      this.previewSrc = null;
+    }
+  }
+
+  // === Lessons chip helpers ===
   toggleLesson(id: string) {
     const ctrl = this.form.controls.lessonIds;
     const set = new Set(ctrl.value);
@@ -106,38 +147,45 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
     return this.form.controls.lessonIds.value.includes(id);
   }
 
+  trackByLesson = (_: number, item: LessonListItem) => item.id;
+
+  // === Submit ===
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.saving.set(true);
+    this.loadError.set(null);
 
-    const payload: CategoryDto = {
+    const baseDto: CategoryDto = {
       name: this.form.controls.name.value.trim(),
       slug: this.form.controls.slug.value.trim(),
-      shortDescription: this.form.controls.shortDescription.value || undefined,
-      imageUrl: this.form.controls.imageUrl.value || undefined,
+      shortDescription: this.form.controls.shortDescription.value || null,
+      imageUrl: this.form.controls.imageUrl.value || null, // may be overwritten if file selected
       lessonIds: this.form.controls.lessonIds.value,
     };
 
-    const req$ = this.isEdit && this.categoryId
-      ? this.categories.update(this.categoryId, payload)
-      : this.categories.create(payload);
+    const req$ = this.isEdit && this.slug
+      ? this.categories.updateWithOptionalImage(this.categoryId, baseDto, this.selectedFile || undefined, this.sharepointPaths)
+      : this.categories.createWithOptionalImage(baseDto, this.selectedFile || undefined, this.sharepointPaths);
 
-    req$.pipe(takeUntil(this.destroy$)).subscribe({
-      next: () => {
-        this.saving.set(false);
-        this.router.navigate(['/categories']); // adjust route if needed
-      },
-      error: () => {
-        this.saving.set(false);
-        this.loadError.set('Save failed. Please try again.');
-      },
-    });
+    req$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap(() => this.saving.set(false)),
+        catchError((e) => {
+          this.saving.set(false);
+          this.loadError.set(e?.message || 'Save failed. Please try again.');
+          return of(null);
+        })
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.router.navigate(['/categories']);
+        }
+      });
   }
-
-  trackByLesson = (_: number, item: LessonListItem) => item.id;
 
   slugify(v: string): string {
     return (v || '')
@@ -152,6 +200,7 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.clearPreviewOnly();
   }
 
   get f() { return this.form.controls; }

@@ -13,7 +13,7 @@ export class UsersService {
 
     }
 
-    getUser(options: ApiCallOptions) {
+    getUser(options: any) {
        return this.apiService.call(options);
     }
 }

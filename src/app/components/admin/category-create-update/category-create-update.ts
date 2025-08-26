@@ -4,8 +4,8 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, of, switchMap, takeUntil, tap, catchError } from 'rxjs';
 
-import { LessonApiService } from '../../services/lesson.service';
-import { CategoryApiService, CategoryDto } from '../../services/category.service';
+import { LessonApiService } from '../../../services/lesson.service';
+import { CategoryApiService, CategoryDto } from '../../../services/category.service';
 
 
 type LessonListItem = { id: string; title: string };

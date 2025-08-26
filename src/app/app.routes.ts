@@ -8,8 +8,8 @@ import { CompareWrapper } from './components/compare-wrapper/compare-wrapper';
 import { OnboardingWrapper } from './components/onboarding-wrapper/onboarding-wrapper';
 import { CreateUpdateOnboardingLesson } from './components/admin/create-update-onboarding-lesson/create-update-onboarding-lesson';
 import { OnbordingLessonList } from './components/admin/onbording-lesson-list/onbording-lesson-list';
-import { CategoryCreateUpdateComponent } from './components/category-create-update/category-create-update';
-import { CategoryListComponent } from './components/category-list/category-list';
+import { CategoryCreateUpdateComponent } from './components/admin/category-create-update/category-create-update';
+import { CategoryListComponent } from './components/admin/category-list/category-list';
 
 export const routes: Routes = [
   { path: '', component: Login },

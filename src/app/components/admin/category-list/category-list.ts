@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, Observable, takeUntil, tap } from 'rxjs';
-import { CategoryApiService, CategoryDto } from '../../services/category.service';
+import { CategoryApiService, CategoryDto } from '../../../services/category.service';
 
 
 export interface Category {

@@ -3,13 +3,6 @@
     <h2 class="text-2xl font-bold">
       {{ isEdit ? 'Edit' : 'Create' }} Category
     </h2>
-
-    <button
-      type="button"
-      class="text-sm text-gray-600 hover:text-gray-800"
-      routerLink="/categories">
-      ← Back
-    </button>
   </div>
 
   <div *ngIf="loadError(); else formBlock" class="text-red-600">

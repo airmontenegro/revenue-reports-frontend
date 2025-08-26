@@ -4,13 +4,6 @@
     <h2 class="text-2xl font-bold">
       {{ isEdit ? 'Edit' : 'Create' }} Lesson
     </h2>
-
-    <button
-      type="button"
-      class="text-sm text-gray-600 hover:text-gray-800"
-      routerLink="/lessons">
-      ← Back
-    </button>
   </div>
 
   <!-- Form -->
@@ -19,10 +12,7 @@
     <!-- Title -->
     <div>
       <label class="block font-semibold mb-1">Title</label>
-      <input
-        class="border p-2 w-full rounded"
-        placeholder="Title"
-        formControlName="title" />
+      <input class="border p-2 w-full rounded" placeholder="Title" formControlName="title" />
       <div class="text-sm text-red-600 mt-1" *ngIf="f['title'].touched && f['title'].errors">
         <span *ngIf="f['title'].errors['required']">Title is required.</span>
         <span *ngIf="f['title'].errors['maxlength']">Max {{ MAX_TITLE }} characters.</span>
@@ -32,10 +22,7 @@
     <!-- Short Description -->
     <div>
       <label class="block font-semibold mb-1">Short Description</label>
-      <input
-        class="border p-2 w-full rounded"
-        placeholder="Short Description"
-        formControlName="shortDescription" />
+      <input class="border p-2 w-full rounded" placeholder="Short Description" formControlName="shortDescription" />
       <div class="text-sm text-red-600 mt-1" *ngIf="f['shortDescription'].touched && f['shortDescription'].errors">
         <span *ngIf="f['shortDescription'].errors['required']">Short description is required.</span>
         <span *ngIf="f['shortDescription'].errors['maxlength']">Max {{ MAX_SHORT }} characters.</span>
@@ -48,11 +35,7 @@
     <!-- Description (Quill) -->
     <div>
       <label class="block font-semibold mb-1">Description</label>
-      <quill-editor
-        formControlName="description"
-        [modules]="modules"
-        [styles]="{ height: '500px' }"
-        theme="snow"
+      <quill-editor formControlName="description" [modules]="modules" [styles]="{ height: '500px' }" theme="snow"
         class="custom-quill-wrapper bg-white">
       </quill-editor>
       <div class="text-sm text-red-600 mt-1" *ngIf="f['description'].touched && f['description'].errors">
@@ -68,9 +51,7 @@
 
     <!-- Submit -->
     <div class="pt-2">
-      <button
-        type="submit"
-        [disabled]="form.invalid || submitting"
+      <button type="submit" [disabled]="form.invalid || submitting"
         class="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white px-4 py-2 rounded">
         <span *ngIf="!isEdit">Create Lesson</span>
         <span *ngIf="isEdit">Update Lesson</span>

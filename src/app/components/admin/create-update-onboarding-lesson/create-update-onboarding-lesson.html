@@ -1,40 +1,81 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-  <input class="border p-2 w-full rounded"
-         placeholder="Title"
-         formControlName="title" />
-  <div class="text-sm text-red-600" *ngIf="f['title'].touched && f['title'].errors">
-    <span *ngIf="f['title'].errors['required']">Title is required.</span>
-    <span *ngIf="f['title'].errors['maxlength']">Max {{MAX_TITLE}} characters.</span>
+<div class="w-full mx-auto p-6 bg-white rounded shadow space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold">
+      {{ isEdit ? 'Edit' : 'Create' }} Lesson
+    </h2>
+
+    <button
+      type="button"
+      class="text-sm text-gray-600 hover:text-gray-800"
+      routerLink="/lessons">
+      ← Back
+    </button>
   </div>
 
-  <input class="border p-2 w-full rounded"
-         placeholder="Short Description"
-         formControlName="shortDescription" />
-  <div class="text-sm text-red-600" *ngIf="f['shortDescription'].touched && f['shortDescription'].errors">
-    <span *ngIf="f['shortDescription'].errors['required']">Short description is required.</span>
-    <span *ngIf="f['shortDescription'].errors['maxlength']">Max {{MAX_SHORT}} characters.</span>
-  </div>
+  <!-- Form -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
-  <label class="block font-semibold">Description</label>
-  <quill-editor formControlName="description"
-                [modules]="modules"
-                [styles]="{height: '500px'}"
-                theme="snow"
-                class="custom-quill-wrapper b-white">
-  </quill-editor>
-  <div class="text-sm text-red-600" *ngIf="f['description'].touched && f['description'].errors">
-    Description is required.
-  </div>
+    <!-- Title -->
+    <div>
+      <label class="block font-semibold mb-1">Title</label>
+      <input
+        class="border p-2 w-full rounded"
+        placeholder="Title"
+        formControlName="title" />
+      <div class="text-sm text-red-600 mt-1" *ngIf="f['title'].touched && f['title'].errors">
+        <span *ngIf="f['title'].errors['required']">Title is required.</span>
+        <span *ngIf="f['title'].errors['maxlength']">Max {{ MAX_TITLE }} characters.</span>
+      </div>
+    </div>
 
-  <!-- Optional admin toggle -->
-  <label class="inline-flex items-center gap-2">
-    <input type="checkbox" formControlName="isDeleted" />
-    <span class="text-sm text-gray-700">Soft delete (hide lesson)</span>
-  </label>
+    <!-- Short Description -->
+    <div>
+      <label class="block font-semibold mb-1">Short Description</label>
+      <input
+        class="border p-2 w-full rounded"
+        placeholder="Short Description"
+        formControlName="shortDescription" />
+      <div class="text-sm text-red-600 mt-1" *ngIf="f['shortDescription'].touched && f['shortDescription'].errors">
+        <span *ngIf="f['shortDescription'].errors['required']">Short description is required.</span>
+        <span *ngIf="f['shortDescription'].errors['maxlength']">Max {{ MAX_SHORT }} characters.</span>
+      </div>
+      <div class="text-sm text-gray-500 mt-1">
+        A brief summary shown in lists and previews.
+      </div>
+    </div>
 
-  <button type="submit"
-          [disabled]="form.invalid || submitting"
-          class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-    {{ isEdit ? 'Update Lesson' : 'Create Lesson' }}
-  </button>
-</form>
+    <!-- Description (Quill) -->
+    <div>
+      <label class="block font-semibold mb-1">Description</label>
+      <quill-editor
+        formControlName="description"
+        [modules]="modules"
+        [styles]="{ height: '500px' }"
+        theme="snow"
+        class="custom-quill-wrapper bg-white">
+      </quill-editor>
+      <div class="text-sm text-red-600 mt-1" *ngIf="f['description'].touched && f['description'].errors">
+        Description is required.
+      </div>
+    </div>
+
+    <!-- Soft delete -->
+    <div class="flex items-center gap-2">
+      <input type="checkbox" formControlName="isDeleted" />
+      <span class="text-sm text-gray-700">Soft delete (hide lesson)</span>
+    </div>
+
+    <!-- Submit -->
+    <div class="pt-2">
+      <button
+        type="submit"
+        [disabled]="form.invalid || submitting"
+        class="bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white px-4 py-2 rounded">
+        <span *ngIf="!isEdit">Create Lesson</span>
+        <span *ngIf="isEdit">Update Lesson</span>
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -29,7 +29,7 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   slug?: string;
   saving = signal(false);
   loadError = signal<string | null>(null);
-  categoryId : string ='';
+  categoryId: string = '';
   lessons: LessonListItem[] = [];
 
   form: FormGroup<{
@@ -37,12 +37,14 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
     slug: FormControl<string>;
     shortDescription: FormControl<string | null>;
     imageUrl: FormControl<string | null>;
+    documentUrl: FormControl<string | null>
     lessonIds: FormControl<string[]>;
   }> = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(120)]],
     slug: ['', [Validators.required, Validators.maxLength(140)]],
     shortDescription: this.fb.control<string | null>('', [Validators.maxLength(140)]),
     imageUrl: this.fb.control<string | null>('', []), // will be set by upload response
+    documentUrl: this.fb.control<string | null>('', []), // will be set by upload response
     lessonIds: this.fb.nonNullable.control<string[]>([]),
   });
 
@@ -50,10 +52,15 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;
   previewSrc: string | null = null;
 
+  selectedDoc: File | null = null;
+  private readonly MAX_DOC_MB = 20;
+  private readonly PDF_MIME = 'application/pdf';
+
   // where to store images in SharePoint (adjust to your tenant)
   private readonly sharepointPaths = {
-    sitePath: '/sites/MySite',
-    folderPath: 'Shared Documents/Images/Categories',
+    sitePath: '/sites/info_wall',       // backend forces this anyway
+    imageFolderPath: 'images/categories',
+    docFolderPath: 'docs/categories',   // or 'docs/acknowledgements'
   };
 
   ngOnInit(): void {
@@ -99,6 +106,7 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
       slug: cat.slug ?? '',
       shortDescription: cat.shortDescription ?? '',
       imageUrl: cat.imageUrl ?? '',
+      documentUrl: cat.documentUrl,
       lessonIds: cat.lessonIds ?? [],
     });
   }
@@ -125,6 +133,40 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
   clearSelectedFile() {
     this.selectedFile = null;
     this.clearPreviewOnly();
+  }
+
+  // Called by (change)="onDocSelected($event)" on the <input type="file">
+  onDocSelected(evt: Event) {
+    const input = evt.target as HTMLInputElement;
+    const file = (input.files && input.files[0]) || null;
+
+    if (!file) {
+      this.selectedDoc = null;
+      return;
+    }
+
+    // size check (20 MB to match your backend interceptor)
+    const maxBytes = this.MAX_DOC_MB * 1024 * 1024;
+    if (file.size > maxBytes) {
+      this.loadError.set(`PDF exceeds ${this.MAX_DOC_MB} MB limit.`);
+      this.selectedDoc = null;
+      return;
+    }
+
+    // type check (accept only PDF)
+    const isPdfMime = file.type === this.PDF_MIME;
+    const isPdfExt = (file.name.split('.').pop() || '').toLowerCase() === 'pdf';
+    if (!isPdfMime && !isPdfExt) {
+      this.loadError.set('Only PDF files are allowed.');
+      this.selectedDoc = null;
+      return;
+    }
+
+    this.selectedDoc = file;
+  }
+
+  clearSelectedDoc() {
+    this.selectedDoc = null;
   }
 
   private clearPreviewOnly() {
@@ -163,12 +205,22 @@ export class CategoryCreateUpdateComponent implements OnInit, OnDestroy {
       slug: this.form.controls.slug.value.trim(),
       shortDescription: this.form.controls.shortDescription.value || null,
       imageUrl: this.form.controls.imageUrl.value || null, // may be overwritten if file selected
+      documentUrl: this.form.controls.documentUrl.value || null,
       lessonIds: this.form.controls.lessonIds.value,
     };
 
     const req$ = this.isEdit && this.slug
-      ? this.categories.updateWithOptionalImage(this.categoryId, baseDto, this.selectedFile || undefined, this.sharepointPaths)
-      : this.categories.createWithOptionalImage(baseDto, this.selectedFile || undefined, this.sharepointPaths);
+      ? this.categories.updateWithOptionalFiles(
+        this.categoryId,
+        baseDto,
+        { image: this.selectedFile || undefined, document: this.selectedDoc || undefined },
+        this.sharepointPaths
+      )
+      : this.categories.createWithOptionalFiles(
+        baseDto,
+        { image: this.selectedFile || undefined, document: this.selectedDoc || undefined },
+        this.sharepointPaths
+      )
 
     req$
       .pipe(

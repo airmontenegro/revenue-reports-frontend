@@ -96,6 +96,39 @@
         </div>
       </div>
 
+      <!-- Acknowledgement PDF (print & sign) -->
+<div>
+  <label class="block font-semibold mb-1">Category Document (PDF)</label>
+
+  <input
+    type="file"
+    accept="application/pdf,.pdf"
+    (change)="onDocSelected($event)"
+    class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4
+           file:rounded file:border-0 file:text-sm file:font-semibold
+           file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+
+  <div class="text-sm text-gray-500 mt-1">
+    Optional. PDF only. Max 20&nbsp;MB. Users can print and sign this file.
+  </div>
+
+  <!-- New selection preview -->
+  <div *ngIf="selectedDoc" class="mt-3 flex items-center gap-3">
+    <span class="text-sm text-gray-700 truncate">{{ selectedDoc.name }}</span>
+    <button type="button" class="text-sm text-red-600" (click)="clearSelectedDoc()">
+      Remove
+    </button>
+  </div>
+
+  <!-- If you add a form control for the saved URL (e.g., ackPdfUrl), show the current file in edit mode: -->
+  <div *ngIf="!selectedDoc && f.documentUrl?.value" class="mt-3">
+    <a [href]="f.documentUrl.value!" target="_blank" rel="noopener" class="text-sm text-blue-600 hover:underline">
+      Current PDF
+    </a>
+  </div>
+ 
+</div>
+
       <!-- Lessons picker -->
       <div>
         <label class="block font-semibold mb-2">Themes (Onboarding Lessons)</label>

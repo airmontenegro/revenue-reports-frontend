@@ -56,6 +56,10 @@ this.router.navigate(['/admin/lessons/edit', id]);  }
     }
   }
 
+    createLesson(): void {
+    this.router.navigate(['/admin/lesson/new']);
+  }
+
   ngOnDestroy(): void {
     this.ngUnsubscribe.next(null);
     this.ngUnsubscribe.complete();

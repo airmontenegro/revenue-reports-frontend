@@ -1,66 +1,85 @@
 <div class="w-full mx-auto p-6 bg-white rounded shadow">
+  <!-- Header -->
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-2xl font-bold">Categories</h2>
     <button
       (click)="createCategory()"
-      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+      class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded"
     >
       + New Category
     </button>
   </div>
 
-  <div *ngIf="loading" class="text-gray-600">Loading...</div>
-
-  <div *ngIf="!loading && categories.length === 0" class="text-gray-600">
-    No categories yet.
+  <!-- Loading / Empty states -->
+  <div *ngIf="loading" class="text-center text-gray-400 mt-4">
+    Loading categories...
   </div>
 
+  <div *ngIf="!loading && categories.length === 0" class="text-center text-gray-500 mt-4">
+    No categories found.
+  </div>
+
+  <!-- Table -->
   <div *ngIf="!loading && categories.length > 0" class="overflow-x-auto">
-    <table class="min-w-full text-left border">
-      <thead class="bg-gray-100">
+    <table class="min-w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-100">
         <tr>
-          <th class="px-4 py-2 border-b">Image</th>
-          <th class="px-4 py-2 border-b">Name</th>
-          <th class="px-4 py-2 border-b">Slug</th>
-          <th class="px-4 py-2 border-b">Short Description</th>
-          <th class="px-4 py-2 border-b">Themes (Lessons)</th>
-          <th class="px-4 py-2 border-b text-right">Actions</th>
+          <th class="px-6 py-3">Image</th>
+          <th class="px-6 py-3">Name</th>
+          <th class="px-6 py-3">Slug</th>
+          <th class="px-6 py-3">Short Description</th>
+          <th class="px-6 py-3">Themes</th>
+          <th class="px-6 py-3 text-center">Actions</th>
         </tr>
       </thead>
+
       <tbody>
-        <tr *ngFor="let c of categories" class="border-b hover:bg-gray-50">
-          <td class="px-4 py-2">
+        <tr *ngFor="let c of categories" class="bg-white border-b hover:bg-gray-50">
+          <!-- Image -->
+          <td class="px-6 py-4">
             <img
               *ngIf="c.imageUrl"
               [src]="c.imageUrl"
-              alt="{{ c.name }}"
-              class="w-12 h-12 object-cover rounded"
+              [alt]="c.name"
+              class="w-12 h-12 object-cover rounded border"
             />
             <span *ngIf="!c.imageUrl" class="text-gray-400">—</span>
           </td>
-          <td class="px-4 py-2 font-medium">{{ c.name }}</td>
-          <td class="px-4 py-2 text-gray-700">{{ c.slug }}</td>
-          <td class="px-4 py-2 text-gray-600 max-w-[360px] truncate">
+
+          <!-- Name -->
+          <td class="px-6 py-4 font-medium text-gray-900">
+            {{ c.name }}
+          </td>
+
+          <!-- Slug -->
+          <td class="px-6 py-4 text-gray-700">
+            {{ c.slug }}
+          </td>
+
+          <!-- Short Description -->
+          <td class="px-6 py-4 text-gray-600 max-w-[420px] truncate">
             {{ c.shortDescription || '—' }}
           </td>
-          <td class="px-4 py-2 text-gray-700">
+
+          <!-- Themes count -->
+          <td class="px-6 py-4 text-gray-700">
             {{ c.lessonIds?.length || 0 }}
           </td>
-          <td class="px-4 py-2">
-            <div class="flex justify-end gap-2">
-              <button
-                (click)="editCategory(c.slug)"
-                class="px-3 py-1 rounded border hover:bg-gray-100"
-              >
-                Edit
-              </button>
-              <button
-                (click)="deleteCategory(c.id)"
-                class="px-3 py-1 rounded border border-red-300 text-red-600 hover:bg-red-50"
-              >
-                Delete
-              </button>
-            </div>
+
+          <!-- Actions -->
+          <td class="px-6 py-4 text-center">
+            <button
+              (click)="editCategory(c.slug)"
+              class="text-blue-600 hover:text-blue-800 font-medium mr-3"
+            >
+              ✏️ Edit
+            </button>
+            <button
+              (click)="deleteCategory(c.id)"
+              class="text-red-600 hover:text-red-800 font-medium"
+            >
+              🗑️ Delete
+            </button>
           </td>
         </tr>
       </tbody>

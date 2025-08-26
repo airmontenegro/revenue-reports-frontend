@@ -52,7 +52,7 @@ export class UploadService {
   }
 
   /** Convenience to derive image URL field from result */
-  extractUrl(res: UploadResult): string {
+  extractUrl(res: UploadResult): string {    
     return res.webUrl ?? res.url ?? '';
   }
 

@@ -1,6 +1,14 @@
 <div class="w-full mx-auto p-6 bg-white rounded shadow">
-      <h2 class="text-2xl font-bold mb-4">Onboarding Lesson List</h2>
-
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold">Onboarding lesson list</h2>
+    <button
+      (click)="createLesson()"
+      class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded"
+    >
+      + New Lesson
+    </button>
+  </div>
   <table class="min-w-full text-sm text-left text-gray-500">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100">
       <tr>

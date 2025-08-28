@@ -1,0 +1,58 @@
+<div class="w-full mx-auto max-w-7xl p-6">
+  <!-- Header (user-facing “Topic”) -->
+  <div class="text-center mb-6">
+    <h1 class="text-3xl font-bold">
+      {{ topic?.name || 'Topic' }}
+    </h1>
+    <p class="mt-2 text-gray-600" *ngIf="topic?.shortDescription">
+      {{ topic?.shortDescription }}
+    </p>
+
+    <!-- Centered consent PDF button -->
+    <div class="mt-4" *ngIf="topic?.ackPdfUrl">
+      <a
+        [href]="topic!.ackPdfUrl!"
+        target="_blank" rel="noopener"
+        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        ⬇️ Download Consent PDF
+      </a>
+    </div>
+  </div>
+
+  <!-- Error / Loading -->
+  <div *ngIf="error" class="text-red-600 mb-4 text-center">{{ error }}</div>
+  <div *ngIf="loading" class="text-center text-gray-400">Loading…</div>
+
+  <!-- Layout -->
+  <div *ngIf="!loading && !error" class="flex gap-6">
+    <!-- Sidebar -->
+    <aside class="w-64 shrink-0">
+      <div class="bg-white border rounded-xl shadow">
+        <div class="px-4 py-3 border-b font-semibold">Lessons</div>
+        <nav class="p-2 space-y-1" *ngIf="lessons.length; else noLessons">
+          <a
+            *ngFor="let l of lessons; trackBy: trackByLesson"
+            [routerLink]="['./lesson', l.id]"
+            routerLinkActive="bg-blue-50 border-blue-300"
+            [class]="
+              'block px-3 py-2 rounded border hover:bg-gray-50 transition ' +
+              (isActive(l.id) ? 'bg-blue-50 border-blue-300' : 'border-transparent')
+            ">
+            <div class="font-medium text-gray-900 truncate">{{ l.title }}</div>
+            <div class="text-xs text-gray-500 truncate" *ngIf="l.shortDescription">{{ l.shortDescription }}</div>
+          </a>
+        </nav>
+        <ng-template #noLessons>
+          <div class="p-4 text-sm text-gray-500">No lessons in this topic yet.</div>
+        </ng-template>
+      </div>
+    </aside>
+
+    <!-- Main content (lesson outlet) -->
+    <main class="flex-1">
+      <div class="bg-white rounded-xl border shadow p-4">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>

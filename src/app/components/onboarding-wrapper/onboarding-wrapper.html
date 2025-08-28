@@ -1,1 +1,69 @@
-<app-onboarding-stepper></app-onboarding-stepper>
+<div class="w-full mx-auto max-w-7xl p-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold">Onboarding Categories</h2>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="text-red-600 mb-4">{{ error }}</div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div *ngFor="let _ of [].constructor(8); let i = index" class="animate-pulse rounded-xl border bg-white shadow">
+      <div class="h-40 bg-gray-200 rounded-t-xl"></div>
+      <div class="p-4 space-y-2">
+        <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+        <div class="h-3 bg-gray-200 rounded w-full"></div>
+        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && !error && categories.length === 0" class="text-gray-500">
+    No categories available yet.
+  </div>
+
+  <!-- Cards -->
+  <div *ngIf="!loading && !error && categories.length > 0"
+       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <button
+      type="button"
+      *ngFor="let c of categories; trackBy: trackById"
+      (click)="openCategory(c)"
+      class="text-left rounded-xl border bg-white shadow hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <!-- Image -->
+      <div class="relative">
+        <img
+          *ngIf="c.imageUrl; else placeholder"
+          [src]="c.imageUrl!"
+          [alt]="c.name"
+          class="w-full h-40 object-cover rounded-t-xl" />
+        <ng-template #placeholder>
+          <div class="w-full h-40 rounded-t-xl bg-gradient-to-br from-gray-100 to-gray-200
+                      flex items-center justify-center">
+            <span class="text-3xl font-semibold text-gray-500">
+              {{ c.name?.charAt(0) | uppercase }}
+            </span>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Text -->
+      <div class="p-4">
+        <div class="flex items-start justify-between gap-3">
+          <h3 class="text-lg font-semibold text-gray-900 truncate">{{ c.name }}</h3>
+        </div>
+        <p class="mt-1 text-sm text-gray-600 line-clamp-2">
+          {{ c.shortDescription || ' ' }}
+        </p>
+
+        <div class="mt-3">
+          <span class="inline-flex items-center text-sm text-blue-600 hover:underline">
+            View details →
+          </span>
+        </div>
+      </div>
+    </button>
+  </div>
+</div>

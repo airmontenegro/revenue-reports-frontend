@@ -10,12 +10,14 @@ import { CreateUpdateOnboardingLesson } from './components/admin/create-update-o
 import { OnbordingLessonList } from './components/admin/onbording-lesson-list/onbording-lesson-list';
 import { CategoryCreateUpdateComponent } from './components/admin/category-create-update/category-create-update';
 import { CategoryListComponent } from './components/admin/category-list/category-list';
+import { OnboardingTopicPage } from './components/onboarding-topic-page/onboarding-topic-page';
+import { OnboardingLessonViewer } from './components/onboarding-lesson-viewer.ts/onboarding-lesson-viewer.ts';
 
 export const routes: Routes = [
   { path: '', component: Login },
   { path: 'dashboard', component: Dashboard },
   {
-    path: 'admin', component: AdminDashboard, canActivate: [AdminGroupGuard], children: [
+    path: 'admin', component: AdminDashboard, children: [
       { path: 'lessons', component: OnbordingLessonList },
       { path: 'lesson/new', component: CreateUpdateOnboardingLesson },
       { path: 'lessons/edit/:id', component: CreateUpdateOnboardingLesson },
@@ -33,5 +35,13 @@ export const routes: Routes = [
   },
   {
     path: 'onboarding', component: OnboardingWrapper
-  }
+  },
+   {
+    path: 'onboarding/topic/:slug',
+    component: OnboardingTopicPage,
+    children: [
+      { path: 'lesson/:lessonId', component: OnboardingLessonViewer },
+      { path: '', pathMatch: 'full', redirectTo: '.' }, // initial redirect handled in component
+    ],
+  },
 ];

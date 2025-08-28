@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MsalService } from '@azure/msal-angular';
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
-import { HttpMethod } from '../../interfaces/httpMethod.interface';
 import { AccountInfo, InteractionRequiredAuthError } from '@azure/msal-browser';
 
 @Component({
@@ -61,7 +60,7 @@ export class Login {
   private checkRedirect(account: AccountInfo) {
     const claims: any = account.idTokenClaims;
     if (claims?.groups?.includes(this.adminGroup)) {
-      this.router.navigate(['/admin']);
+      this.router.navigate(['/onboarding']);
     } else {
       this.router.navigate(['/']);
     }

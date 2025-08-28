@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OnboardingStepper } from './onboarding-stepper';
+import { OnboardingLessonViewerTs } from './onboarding-lesson-viewer.ts';
 
-describe('OnboardingStepper', () => {
-  let component: OnboardingStepper;
-  let fixture: ComponentFixture<OnboardingStepper>;
+describe('OnboardingLessonViewerTs', () => {
+  let component: OnboardingLessonViewerTs;
+  let fixture: ComponentFixture<OnboardingLessonViewerTs>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OnboardingStepper]
+      imports: [OnboardingLessonViewerTs]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(OnboardingStepper);
+    fixture = TestBed.createComponent(OnboardingLessonViewerTs);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

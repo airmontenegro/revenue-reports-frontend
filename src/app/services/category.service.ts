@@ -12,6 +12,7 @@ export interface CategoryDto {
   shortDescription?: string | null;
   imageUrl?: string | null;
   documentUrl?: string | null;
+   themes?: Array<{ id: string; title: string; shortDescription?: string | null }>; 
   lessonIds?: string[];
 }
 

@@ -5,5 +5,5 @@ export interface Lesson {
   title: string;
   shortDescription: string;
   description: string; // HTML from Quill
-  questions: Question[];
+  documentUrl: string
 }

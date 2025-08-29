@@ -1,5 +1,6 @@
-<div class="w-full mx-auto max-w-7xl p-6">
-  <!-- Header (user-facing “Topic”) -->
+<div class= " relative w-full mx-auto max-w-7xl p-6">
+
+
   <div class="text-center mb-6">
     <h1 class="text-3xl font-bold">
       {{ topic?.name || 'Topic' }}
@@ -9,12 +10,10 @@
     </p>
 
     <!-- Centered consent PDF button -->
-    <div class="mt-4" *ngIf="topic?.ackPdfUrl">
-      <a
-        [href]="topic!.ackPdfUrl!"
-        target="_blank" rel="noopener"
-        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-        ⬇️ Download Consent PDF
+    <div class="mt-4" *ngIf="topic?.documentUrl">
+      <a *ngIf="topic?.documentUrl" [href]="topic!.documentUrl!" target="_blank" rel="noopener"
+        class="text-blue-600 hover:underline">
+        Download consent PDF
       </a>
     </div>
   </div>
@@ -30,16 +29,13 @@
       <div class="bg-white border rounded-xl shadow">
         <div class="px-4 py-3 border-b font-semibold">Lessons</div>
         <nav class="p-2 space-y-1" *ngIf="lessons.length; else noLessons">
-          <a
-            *ngFor="let l of lessons; trackBy: trackByLesson"
-            [routerLink]="['./lesson', l.id]"
-            routerLinkActive="bg-blue-50 border-blue-300"
-            [class]="
+          <a *ngFor="let l of lessons; trackBy: trackByLesson" [routerLink]="['./lesson', l.id]"
+            routerLinkActive="bg-blue-50 border-blue-300" [class]="
               'block px-3 py-2 rounded border hover:bg-gray-50 transition ' +
               (isActive(l.id) ? 'bg-blue-50 border-blue-300' : 'border-transparent')
             ">
             <div class="font-medium text-gray-900 truncate">{{ l.title }}</div>
-            <div class="text-xs text-gray-500 truncate" *ngIf="l.shortDescription">{{ l.shortDescription }}</div>
+            <!-- <div class="text-xs text-gray-500 truncate" *ngIf="l.shortDescription">{{ l.shortDescription }}</div> -->
           </a>
         </nav>
         <ng-template #noLessons>

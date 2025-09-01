@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { Dashboard } from './components/dashboard/dashboard';
 import { AdminDashboard } from './components/admin/admin-dashboard/admin-dashboard';
 import { Login } from './components/login/login';
-import { AdminGroupGuard } from './admin-group.guard';
 import { UserProfile } from './components/user-profile/user-profile';
 import { CompareWrapper } from './components/compare-wrapper/compare-wrapper';
 import { OnboardingWrapper } from './components/onboarding-wrapper/onboarding-wrapper';
@@ -11,7 +10,7 @@ import { OnbordingLessonList } from './components/admin/onbording-lesson-list/on
 import { CategoryCreateUpdateComponent } from './components/admin/category-create-update/category-create-update';
 import { CategoryListComponent } from './components/admin/category-list/category-list';
 import { OnboardingTopicPage } from './components/onboarding-topic-page/onboarding-topic-page';
-import { OnboardingLessonViewer } from './components/onboarding-lesson-viewer.ts/onboarding-lesson-viewer.ts';
+import { OnboardingLessonViewer } from './components/onboarding-lesson-viewer.ts/onboarding-lesson-viewer';
 
 export const routes: Routes = [
   { path: '', component: Login },

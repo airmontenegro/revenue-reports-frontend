@@ -9,23 +9,7 @@ import { Lesson } from '../../interfaces/lesson.interface';
   selector: 'app-onboarding-lesson-viewer',
   standalone: true,
   imports: [CommonModule],
-template: `
-  <div *ngIf="loading" class="text-gray-400">Loading lesson…</div>
-  <div *ngIf="error" class="text-red-600">{{ error }}</div>
-  <div *ngIf="!loading && !error && lesson">
-    <h2 class="text-xl font-bold text-center my-8">{{ lesson.title }}</h2>
-    <p class="text-gray-600 mt-1" *ngIf="lesson.shortDescription">{{ lesson.shortDescription }}</p>
-
-
-
-    <div class="prose mt-4" [innerHTML]="lesson.description"></div>
-        <div class="my-8" *ngIf="lesson.documentUrl">
-      <a [href]="lesson.documentUrl!" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">
-        Download lesson PDF
-      </a>
-    </div>
-  </div>
-`
+templateUrl: './onboarding-lesson-viewer.html'
 })
 export class OnboardingLessonViewer implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);

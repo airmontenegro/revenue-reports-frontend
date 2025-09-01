@@ -1,22 +1,35 @@
-<div class= " relative w-full mx-auto max-w-7xl p-6">
+<div class="relative w-full mx-auto max-w-7xl p-6">
 
+  <!-- HERO with topic image -->
+  <section class="relative mb-6">
+    <div class="relative h-56 sm:h-64 md:h-72 w-full overflow-hidden rounded-xl shadow">
+      <!-- Background image (or fallback gradient) -->
+      <img *ngIf="topic?.imageUrl; else heroFallback" [src]="topic!.imageUrl!" [alt]="topic?.name || 'Topic image'"
+        class="absolute inset-0 w-full h-full object-cover" />
+      <ng-template #heroFallback>
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-300"></div>
+      </ng-template>
 
-  <div class="text-center mb-6">
-    <h1 class="text-3xl font-bold">
-      {{ topic?.name || 'Topic' }}
-    </h1>
-    <p class="mt-2 text-gray-600" *ngIf="topic?.shortDescription">
-      {{ topic?.shortDescription }}
-    </p>
+      <!-- Dark overlay for readability -->
+      <div class="absolute inset-0 bg-black/35"></div>
 
-    <!-- Centered consent PDF button -->
-    <div class="mt-4" *ngIf="topic?.documentUrl">
-      <a *ngIf="topic?.documentUrl" [href]="topic!.documentUrl!" target="_blank" rel="noopener"
-        class="text-blue-600 hover:underline">
-        Download consent PDF
-      </a>
+      <!-- Hero content -->
+      <div class="relative h-full flex flex-col items-center justify-center text-center px-4">
+        <h1 class="text-3xl font-bold text-white drop-shadow">
+          {{ topic?.name || 'Topic' }}
+        </h1>
+        <p class="mt-2 text-white/90" *ngIf="topic?.shortDescription">
+          {{ topic?.shortDescription }}
+        </p>
+        <div class="mt-3" *ngIf="topic?.documentUrl">
+          <a [href]="topic!.documentUrl!" target="_blank" rel="noopener"
+            class="text-white underline decoration-white/70 hover:decoration-white">
+            Download consent PDF
+          </a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Error / Loading -->
   <div *ngIf="error" class="text-red-600 mb-4 text-center">{{ error }}</div>
@@ -27,7 +40,7 @@
     <!-- Sidebar -->
     <aside class="w-64 shrink-0">
       <div class="bg-white border rounded-xl shadow">
-        <div class="px-4 py-3 border-b font-semibold">Lessons</div>
+        <div class="px-4 py-3 border-b font-semibold ">Teme iz ove oblasti</div>
         <nav class="p-2 space-y-1" *ngIf="lessons.length; else noLessons">
           <a *ngFor="let l of lessons; trackBy: trackByLesson" [routerLink]="['./lesson', l.id]"
             routerLinkActive="bg-blue-50 border-blue-300" [class]="
@@ -35,7 +48,6 @@
               (isActive(l.id) ? 'bg-blue-50 border-blue-300' : 'border-transparent')
             ">
             <div class="font-medium text-gray-900 truncate">{{ l.title }}</div>
-            <!-- <div class="text-xs text-gray-500 truncate" *ngIf="l.shortDescription">{{ l.shortDescription }}</div> -->
           </a>
         </nav>
         <ng-template #noLessons>
@@ -45,8 +57,8 @@
     </aside>
 
     <!-- Main content (lesson outlet) -->
-    <main class="flex-1">
-      <div class="bg-white rounded-xl border shadow p-4">
+    <main class="flex-1 min-w-0">
+      <div class="bg-white rounded-xl border shadow p-4 overflow-hidden">
         <router-outlet></router-outlet>
       </div>
     </main>
